@@ -13,7 +13,7 @@ This project addresses that problem by building a pipeline that:
 
 * Identifies the top 5 recurring complaint themes using unsupervised clustering
 * Classifies customer sentiment (positive/negative/neutral)
-* Highlights main product pain points
+* Highlights main product pain points (a cluster that contains at least 5% of reviews and has a majority of negative reviews)
 
 ---
 
@@ -21,9 +21,9 @@ This project addresses that problem by building a pipeline that:
 
 | # | Goal | Metrics |
 |---|------|------------------------|
-| 1 | Identify the top 5 recurring complaint themes | K-Means clustering with silhouette score > 0.30 if possible |
+| 1 | Identify the top 5 recurring complaint themes (pain point) | K-Means clustering with silhouette score > 0.30 if possible |
 | 2 | Classify review sentiment (positive / negative / neutral) | Logistic Regression with > 75% accuracy |
-| 3 | Rank pain points (a cluster that contains at least 5% of reviews and has a majority of negative reviews) by frequency | Frequency count of reviews per cluster |
+| 3 | Rank pain points by frequency | Frequency count of reviews per cluster |
 | 4 | Distinguish features by rating | Compare most common terms in 1–2 star vs. 4–5 star reviews |
 
 **If data is limited:** a Kaggle review dataset would be used instead (like [Amazon product reviews](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)) using the same pipeline.
