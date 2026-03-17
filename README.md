@@ -33,7 +33,7 @@ This project addresses that problem by building a pipeline that:
 
 ### Primary Data Source
 
--  **App Store reviews for Robinhood** scraped using the [app-store-scraper](https://pypi.org/project/app-store-scraper/) Python library (no API key neded)
+-  **App Store reviews for Robinhood** scraped using the [app-store-web-scraper](https://pypi.org/project/app-store-web-scraper/) Python library (no API key neded)
   - Target: ~5,000–10,000 English reviews
   - Fields collected: review text, star rating, review date, review title
   - No API key or authentication required
@@ -43,7 +43,7 @@ This project addresses that problem by building a pipeline that:
 
 Primary method:
 
-* `app-store-scraper` Python library (for App Store data)
+* `app-store-web-scraper` Python library (for App Store data)
 
 ```python
 from app_store_scraper import AppStore
