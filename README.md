@@ -41,7 +41,7 @@ The notebook will:
 | Apple App Store (US) | `app-store-web-scraper` | ~500 | Apple's public API caps at 500 reviews per country |
 | Apple App Store (GB) | `app-store-web-scraper` | ~100 | Stopped early due to API returning bad entries |
 | Google Play Store (US) | `google-play-scraper` | ~5,000 |  |
-| **Total (after cleaning)** | | **~4,483** | After deduplication and non-English removal |
+| **Total (after cleaning)** | | **~4,483** | After non-English removal |
 
 ### Data Fields Collected
 - `review` - raw review text
@@ -85,8 +85,8 @@ Text reviews are converted to numerical features using **TF-IDF** whihch is rele
 **Parameters:**
 - `max_features=1000` — top 1000 most useful terms
 - `ngram_range=(1,2)` — captures single words and two-word phrases (e.g. "customer service")
-- `min_df=3` — a term must appear in at least 3 reviews to be included
-- `max_df=0.9` — terms appearing in more than 90% of reviews are excluded
+- `min_df=20` — a term must appear in at least 3* (20 currently) reviews to be included
+- `max_df=0.85` — terms appearing in more than 90% of reviews are excluded
 - `sublinear_tf=True` — replaces raw frequency with 1 + log(freq) to reduce the impact of very common terms
 
 **Result:** TF-IDF matrix of shape (4483, 1000) — 4483 reviews × 1000 features
