@@ -2,7 +2,7 @@
 # for the core pipeline functions.
 
 
-import re, pytest
+import re, pytest, contractions
 
 
 def get_sentiment(rating):
@@ -16,6 +16,7 @@ def get_sentiment(rating):
 
 
 def clean_text(text):
+    text = contractions.fix(str(text))
     text = text.lower()
     text = re.sub(r'\d+', '', text)
     text = re.sub(r'[^a-z\s]', '', text)
