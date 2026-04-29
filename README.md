@@ -16,6 +16,103 @@ This project addresses that problem by building a pipeline that:
 * Highlights main product pain points (a cluster that contains at least 5% of reviews and has a majority of negative reviews)
 
 ---
+## How to Run
+
+### Prerequisites
+- Python 3.xx+
+- Google Colab or Jupyter Notebook
+
+### Installation
+``` pip install app-store-web-scraper google-play-scraper langdetect scikit-learn pandas matplotlib seaborn ```
+
+### Running the Pipeline
+Open `robinhood_reviews_cs506_project.ipynb` in Google Colab and run all cells from the top. Each section is labeled and can be run independently after the data collection cells have been ran.
+
+The notebook will:
+1. Scrape reviews from the App Store and Google Play
+2. Combine, clean and save the data as `robinhood_reviews_cleaned.csv`
+3. Generate all EDA visualizations
+4. Train and evaluate models
+
+### Current Data Sources
+
+| Source | Library | Reviews Collected | Notes |
+|--------|---------|-------------------|-------|
+| Apple App Store (US) | `app-store-web-scraper` | ~500 | Apple's public API caps at 500 reviews per country |
+| Apple App Store (GB) | `app-store-web-scraper` | ~100 | Stopped early due to API returning bad entries |
+| Google Play Store (US) | `google-play-scraper` | ~5,000 |  |
+| **Total (after cleaning)** | | **~4,483** | After non-English removal |
+
+### Data Fields Collected
+- `review` - raw review text
+- `rating` - star rating (1–5)
+- `date` - review submission date
+- `title` - review title
+- `country` - country code or 'google_play'
+- `sentiment` - derived label (negative/neutral/positive)
+- `source` - 'App Store' or 'Google Play'
+
+---
+
+## Visualizations
+
+| Visualization | Insight |
+|--------------|---------|
+| Rating Distribution | Heavily skewed; most reviews are 1-star or 5-star, fewer in betweens |
+| Sentiment Distribution | More negative than positive reviews in general |
+| Review Length Distribution | Most reviews are short (under 200 characters) |
+| Avg Review Length by Sentiment | Negative reviews tend to be longer since users write more when complaining |
+| Review Volume by Source | ~89% Google Play, ~11% App Store; dataset skews toward Android users |
+| Average Rating Over Time | Ratings trending downward from ~3.5 in mid-2025 to ~2.0-2.5 in early 2026 |
+| Review Volume Over Time | Low App Store volume causes misleading spikes in early period |
+
+---
+
+## Data Processing
+
+### Cleaning Steps
+1. **Remove duplicatiion** — removed duplicate reviews using exact text match
+2. **Non-English removal** — used `langdetect` to filter non-English reviews; and reviews shorter than 20-30 characters were kept because of reliability
+3. **Text normalization** — lowercased all text, removed numbers and punctuation using regulr expression
+4. **Stop word removal** — handled using sklearn's `ENGLISH_STOP_WORDS` plus domain specific stopwords added
+
+---
+
+## Feature Extraction (TF-IDF)
+
+Text reviews are converted to numerical features using **TF-IDF** whihch is relevant. It emphasizes the word that are important to specific reviews and reduced the weights on words that appear across all reviews (because they could be stop words).
+
+**Parameters:**
+- `max_features=1000` — top 1000 most useful terms
+- `ngram_range=(1,2)` — captures single words and two-word phrases (e.g. "customer service")
+- `min_df=20` — a term must appear in at least 3* (20 currently) reviews to be included
+- `max_df=0.85` — terms appearing in more than 90% of reviews are excluded
+- `sublinear_tf=True` — replaces raw frequency with 1 + log(freq) to reduce the impact of very common terms
+
+**Result:** TF-IDF matrix of shape (4483, 1000) — 4483 reviews × 1000 features
+
+---
+
+## Dimensionality Reduction (LSA)
+
+Before clustering, TF-IDF features are reduced using **Latent Semantic Analysis (LSA)** via `TruncatedSVD` becuase K-Means makes spherical clusters, but text data in a high-dimensional TF-IDF space is sparse and not spherical.
+
+- `n_components=20` was chosen after experimenting
+
+**Result:** Reduced matrix of shape (4483, 20)
+
+---
+
+## Challenges Faced
+
+1. **Unbalanced data volume by source**: 89% Google Play, 11% App Store. Results dont full represent IOS users
+2. **Apple API cap**- the app store scraper API limits to 500 reviews per country (10 pages × 50 reviews), regardless of how many are requested
+3. **Neutral class is small**: only ~300 neutral reviews/3 star rating
+4. **Silhouette scores are low**: due to high dimensionality and sparse overlap between topics. LSA improved scores significantly (from ~0.02 to ~0.18) but did not reach the 0.30 target
+5. **Recent data only**: Older complaints or long-term trends are not captured covers; May 2025–March 2026.
+
+---
+
 
 ## Project Goals
 
@@ -46,11 +143,9 @@ Primary method:
 * `app-store-web-scraper` Python library (for App Store data)
 
 ```python
-from app_store_scraper import AppStore
+from app_store_web_scraper import AppStore
 
-app = AppStore(country='us', app_name='robinhood-trading-investing', app_id='938003185')
-app.review(how_many=5000)
-reviews = app.reviews  # list of dictionary with 'review', 'rating', 'date', etc.
+app = AppStoreEntry(app_id=938003185, country="us")
 ```
 
 ---
@@ -79,9 +174,9 @@ reviews = app.reviews  # list of dictionary with 'review', 'rating', 'date', etc
 ## Visualization Plan
 
 - **Theme frequency bar chart**: how many reviews fall into each cluster
-- **Sentiment distribution pie chart**: share of positive / neutral / negative reviews overall
-- **Theme x sentiment heatmap**: which complaint themes correlate with the most negative sentiment
-- **Rating distribution over time**: line chart of average star rating by month
+- **Sentiment distribution pie chart**: share of positive/neutral/negative reviews 
+- **Theme/ sentiment heatmap**: which complaint themes correlate with the most negative sentiment
+- **Rating distribution over time**: line chart of average number rating by month
 
 
 ## Test Plan
