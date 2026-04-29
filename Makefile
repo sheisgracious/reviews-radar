@@ -1,7 +1,7 @@
 .PHONY: install run test clean
 
 install:
-	pip install app-store-web-scraper google-play-scraper langdetect contractions scikit-learn pandas matplotlib seaborn nbconvert jupyter
+	pip install app-store-web-scraper google-play-scraper langdetect contractions scikit-learn pandas matplotlib seaborn nbconvert jupyter pytest 
 
 run:
 	jupyter nbconvert --to notebook --execute reviews_radar_notebook.ipynb --output reviews_radar_notebook_executed.ipynb --ExecutePreprocessor.timeout=600
