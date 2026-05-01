@@ -7,45 +7,45 @@ The **Customer Feedback Intelligence Pipeline** is a data science system that an
 
 ## Problem Statement
 
-Companies receive thousands of customer reviews, support tickets, and feedback comments. Manually reading and summarizing this feedback is time-consuming and often leads to missed trends, delayed responses to issues.
+Companies receive thousands of customer reviews, support tickets, and feedback comments. Manually reading and summarizing this feedback is time-consuming and often leads to missed trends and delayed responses to issues.
 
 Goal: Successfully identify the top 5 most frequently occurring complaint themes in Robinhood app store reviews, and classify review sentiment (positive/negative/neutral) with at least 75% accuracy, allowing product teams to prioritize which pain points to address.
 
 
 ---
-## How to Run
+## How to Build and Run
 
 ### Prerequisites
-- Python 3.10+
-- Google Colab (recommended) or Jupyter Notebook
+```bash
+Python 3.10+
+Jupyter Notebook or Google Colab
+```
 
-### Installation
-
+### Install dependencies
 ```bash
 make install
 ```
 
-or 
+### Run the pipeline
+```bash
+make run
+```
 
-``` pip install app-store-web-scraper google-play-scraper langdetect scikit-learn pandas matplotlib seaborn contractions ```
+This executes `reviews_radar_notebook.ipynb` and saves:
 
-### Running the Pipeline
-Open `reviews_radar_notebook.ipynb` in Google Colab and run all cells from the top. Each section is labeled and can be run independently after the data collection cells have been ran.
-
-The notebook will:
-1. Scrape reviews from the App Store and Google Play
-2. Combine, clean and save the data as `robinhood_reviews_cleaned.csv`
-3. Generate and save all EDA visualizations
-4. Train and evaluate models
-5. Apply the pipeline to competitor apps
+```bash
+reviews_radar_notebook_executed.ipynb
+```
 
 ### Run tests
- 
 ```bash
 make test
 ```
 
-This runs `tests/test_pipeline.py` using pytest, which tests the core pipeline functions.
+### Clean generated files
+```bash
+make clean
+```
 
 ## Repository Structure
  
@@ -68,14 +68,14 @@ This runs `tests/test_pipeline.py` using pytest, which tests the core pipeline f
 
 | Source | Library | Reviews Collected | Notes |
 |--------|---------|-------------------|-------|
-| Apple App Store (US) | `app-store-web-scraper` | ~500 | Apple's public API caps at 500 reviews per country |
+| Apple App Store (US) | `app-store-web-scraper` | 500 | Apple's public API caps at 500 reviews per country |
 | Apple App Store (GB) | `app-store-web-scraper` | ~100 | Stopped early due to API returning bad entries |
 | Google Play Store (US) | `google-play-scraper` | ~5,000 |  |
 | **Total (after cleaning)** | | **~3,957** | After non-English removal |
 
 ### Why two sources?
  
-Apple's API caps at ~500 reviews per country regardless of how many are requested. Adding the GB endpoint and Google Play compensates for this and gives better coverage. The dataset skews about 85% Android as a result (limitation).
+Apple's API caps at 600 reviews per country regardless of how many are requested. Adding the GB endpoint and Google Play compensates for this and gives better coverage. The dataset skews about 85% Android as a result (limitation).
 
 ### Data Fields Collected
 - `review` - raw review text
@@ -133,7 +133,7 @@ Reviews are converted to numerical vectors using TF-IDF. Key parameters:
 
 ## Dimensionality Reduction (LSA)
 
-Before clustering, TF-IDF features are reduced using **Latent Semantic Analysis (LSA)** via `TruncatedSVD` becuase K-Means makes spherical clusters with Euclidean distance, but text data in a high-dimensional TF-IDF space is sparse and not spherical.
+Before clustering, TF-IDF features are reduced using **Latent Semantic Analysis (LSA)** via `TruncatedSVD` because K-Means makes spherical clusters with Euclidean distance, but text data in a high-dimensional TF-IDF space is sparse and not spherical.
 
 - `n_components=20` was chosen after experimenting; produced better silhouette scores than 50
 
@@ -147,21 +147,9 @@ Before clustering, TF-IDF features are reduced using **Latent Semantic Analysis 
 2. **Apple API cap**- the app store scraper API limits to 500 reviews per country (10 pages × 50 reviews), regardless of how many are requested
 3. **Neutral class is small**: only ~300 neutral reviews/3 star rating
 4. **Silhouette scores are low**: due to high dimensionality and sparse overlap between topics. LSA improved scores significantly (from ~0.02 to ~0.18) but did not reach the 0.30 target
-5. **Recent data only**: Older complaints or long-term trends are not captured covers; mid 2024 – March 2026.
+5. **Recent data only**: Older complaints or long-term trends are not captured; the dataset covers mid-2024 to March 2026.
 
 ---
-
-
-## Project Goals
-
-| # | Goal | Metrics |
-|---|------|------------------------|
-| 1 | Identify the top 5 recurring complaint themes (pain point) | K-Means clustering with silhouette score > 0.30 if possible |
-| 2 | Classify review sentiment (positive / negative / neutral) | Logistic Regression with > 75% accuracy |
-| 3 | Rank pain points by frequency | Frequency count of reviews per cluster |
-| 4 | Distinguish features by rating | Compare most common terms in 1–2 star vs. 4–5 star reviews |
-
-**If data is limited:** a Kaggle review dataset would be used instead (like [Amazon product reviews](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)) using the same pipeline.
 
 
 ## Model Training & Evaluation
@@ -202,7 +190,7 @@ Three classifiers were compared on the same TF-IDF features:
  
 ![Model Accuracy Comparison](figures/model_accuracy.png)
 
-**75% target:** Met by Complement Naive Bayes (CNB) -> (74.2% test, 75.2% CV).
+**75% target:** Met by Complement Naive Bayes (CNB)-> (74.2% test, 75.2% CV).
  
 **CNB wins:** CNB models each class by learning from all other classes combined, making it more robust on the imbalanced dataset (only 249 neutral reviews vs 1,844 negative). 
  
@@ -253,42 +241,13 @@ All visualizations are saved in the `figures/` folder.
 
 ## Dataset
 
-### Primary Data Source
+### Primary Data Sources
 
--  **App Store reviews for Robinhood** scraped using the [app-store-web-scraper](https://pypi.org/project/app-store-web-scraper/) Python library (no API key neded)
-  - Target: ~5,000–10,000 English reviews
-  - Fields collected: review text, star rating, review date, review title
-  - No API key or authentication required
-- Amazon product review datasets (Kaggle as fallback)
-
-### Data Collection
-
-Primary method:
-
-* `app-store-web-scraper` Python library (for App Store data)
-
-```python
-from app_store_web_scraper import AppStore
-
-app = AppStoreEntry(app_id=938003185, country="us")
-```
-
----
+- Apple App Store reviews for Robinhood scraped using `app-store-web-scraper`
+- Google Play reviews for Robinhood scraped using `google-play-scraper`
+- Google Play reviews for Fidelity, Charles Schwab, and Vanguard for competitor comparison
 
 
-## How to Test
- 
-```bash
-make test
-```
- 
-The test suite covers:
-- `get_sentiment()` — label mapping for all 5 star ratings
-- `clean_text()` — number removal, lowercasing, punctuation removal, whitespace normalization
-- Google Play scraper — smoke test confirming the scraper reaches the API and returns reviews with expected fields
-
-Tests are also run automatically on every push via GitHub Actions (`.github/workflows/test.yml`).
- 
 ---
 
 ## Stretch goals 
