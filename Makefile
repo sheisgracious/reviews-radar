@@ -14,4 +14,5 @@ clean:
 	rm -f *.pkl model_metadata.json robinhood_reviews_app_store.csv
 	rm -f *.png
 	rm -f reviews_radar_notebook_executed.ipynb
+	rm -rf __pycache__ .pytest_cache
 

@@ -75,7 +75,7 @@ make clean
 
 ### Why two sources?
  
-Apple's API caps at 600 reviews per country regardless of how many are requested. Adding the GB endpoint and Google Play compensates for this and gives better coverage. The dataset skews about 85% Android as a result (limitation).
+Apple's API caps at 500 reviews per country regardless of how many are requested. Adding the GB endpoint and Google Play compensates for this and gives better coverage. The dataset skews about 85% Android as a result (limitation).
 
 ### Data Fields Collected
 - `review` - raw review text
