@@ -1,6 +1,6 @@
 # Customer Feedback Intelligence Pipeline
 
-> **Presentation:** [YouTube demo](https://google.com)
+> **Presentation:** [YouTube Presentation Link](https://youtu.be/9KUxhWQQ7mc)
 
 ## Overview
 The **Customer Feedback Intelligence Pipeline** is a data science system that analyzes large volumes of customer reviews for the **Robinhood** mobile application to extract useful business insights. The machine learning pipeline converts raw customer app store reviews into structured insights, identifying complaint themes, classifying sentiment, and ranking product pain points. Trained on Robinhood reviews and competitor analysis with Fidelity, Charles Schwab, and Vanguard.
