@@ -147,7 +147,7 @@ Before clustering, TF-IDF features are reduced using **Latent Semantic Analysis 
 2. **Apple API cap**- the app store scraper API limits to 500 reviews per country (10 pages × 50 reviews), regardless of how many are requested
 3. **Neutral class is small**: only ~300 neutral reviews/3 star rating
 4. **Silhouette scores are low**: due to high dimensionality and sparse overlap between topics. LSA improved scores significantly (from ~0.02 to ~0.18) but did not reach the 0.30 target
-5. **Recent data only**: Older complaints or long-term trends are not captured; the dataset covers mid-2024 to March 2026.
+5. **Recent data only**: Older complaints or long-term trends are not captured; the dataset covers mid-2025 to March 2026.
 
 ---
 
@@ -207,7 +207,7 @@ Three classifiers were compared on the same TF-IDF features:
 ### Key Findings
  
 - **Trading & Options is the dominant pain point**— cluster 0 mentions execution, fills, options features, crypto, or pricing
-- **Rating trend is declining**- Google Play average fell from ~3.4 (May 2024) to ~1.6 (April 2026); the worst single-month drop was -2.67 stars in November 2024
+- **Rating trend is declining**- Google Play average fell from ~3.4 (May 2025) to ~1.6 (April 2026); the worst single-month drop was -2.67 stars in November 2025
 - **Poor app quality is industry-wide** — Fidelity has a lower average rating (1.75) than Robinhood (2.51) despite being a larger company
 
 ![Competitor Negative Review Rate](figures/competitor_neg_rate.png)
