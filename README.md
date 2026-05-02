@@ -11,7 +11,6 @@ Companies receive thousands of customer reviews, support tickets, and feedback c
 
 Goal: Successfully identify the top 5 most frequently occurring complaint themes in Robinhood app store reviews, and classify review sentiment (positive/negative/neutral) with at least 75% accuracy, allowing product teams to prioritize which pain points to address.
 
-
 ---
 ## How to Build and Run
 
