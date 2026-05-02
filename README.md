@@ -184,7 +184,7 @@ Cluster labels were assigned by inspecting each cluster's top 12 TF-IDF terms an
 
 ### Sentiment Classification
  
-Sentiment labels were derived from ratings:
+Sentiment labels were derived from ratings (no manual annotation required):
 - 1–2 stars -> negative
 - 3 stars -> neutral
 - 4–5 stars -> positive
@@ -215,7 +215,7 @@ Three classifiers were compared on the same TF-IDF features:
  
 ### Key Findings
  
-- **Trading & Options is the dominant pain point**— cluster 0 mentions execution, fills, options features, crypto, or pricing
+- **Trading & Options is the dominant pain point**— reviews involved execution issues, options, crypto complaints, and pricing
 - **Rating trend is declining**- Google Play average fell from ~3.6 (May 2025) to ~1.6 (April 2026); the worst single-month drop was -2.67 stars in November 2025
 
 ![Competitor Negative Review Rate](figures/competitor_neg_rate.png)
