@@ -174,13 +174,20 @@ Cluster labels were assigned by inspecting each cluster's top 12 TF-IDF terms an
 
 ![Complaint Clusters](figures/cluster_frequency.png)
 
+| Rank | Complaint Theme | Review Count |
+|------|----------------|--------------|
+| 1 | Crypto / Trading / Options | ~975 |
+| 2 | Account Support / Email / Phone | ~610 |
+| 3 | Money Withdrawal & Banking | ~375 |
+| 4 | Customer Service Quality | ~185 |
+| 5 | App Updates & Technical Issues | ~175 |
+
 ### Sentiment Classification
  
-Sentiment labels were derived from star ratings (no manual annotation required):
+Sentiment labels were derived from ratings:
 - 1–2 stars -> negative
 - 3 stars -> neutral
 - 4–5 stars -> positive
-
 
 Three classifiers were compared on the same TF-IDF features:
  
