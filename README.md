@@ -1,9 +1,9 @@
 # Customer Feedback Intelligence Pipeline
 
-> **Presentation:** [YouTube Presentation Link](https://youtu.be/9KUxhWQQ7mc)
+> [YouTube Presentation Link](https://youtu.be/9KUxhWQQ7mc)
 
 ## Overview
-The **Customer Feedback Intelligence Pipeline** is a data science system that analyzes large volumes of customer reviews for the **Robinhood** mobile application to extract useful business insights. The machine learning pipeline converts raw customer app store reviews into structured insights, identifying complaint themes, classifying sentiment, and ranking product pain points. Trained on Robinhood reviews and competitor analysis with Fidelity, Charles Schwab, and Vanguard.
+The **Customer Feedback Intelligence Pipeline** is a data science / ML system that analyzes large volumes of customer reviews for the **Robinhood** mobile application to extract useful business insights. The machine learning pipeline converts raw customer app store reviews into structured insights, identifying complaint themes, classifying sentiment, and ranking product pain points. Trained on Robinhood reviews and competitor analysis with Fidelity, Charles Schwab, and Vanguard.
 
 ## Problem Statement
 
@@ -105,11 +105,11 @@ Apple's API caps at 500 reviews per country regardless of how many are requested
 ## Data Processing
 
 ### Cleaning Steps
-1. **Remove duplication** — removed duplicate reviews using exact text match
-2. **Non-English removal** — used `langdetect` to filter non-English reviews; and reviews shorter than 20-30 characters were kept because of reliability
+1. **Remove duplicates** — removed duplicate reviews using exact text match
+2. **Non-English reviews removal** — used `langdetect` to filter non-English reviews; and reviews shorter than 20-30 characters were kept because of reliability
 3. **Text normalization** — lowercased all text, removed numbers and punctuation using regular expression
 4. **Stop word removal** — handled using sklearn's `ENGLISH_STOP_WORDS` plus domain specific stopwords added
-5. **Contraction expansion** — using `contractions.fix()` method, converting "can't" to "cannot" ensuring consistent vocabulary
+5. **Contraction expansion** — using `contractions.fix()` method, converting e.g. "can't" to "cannot" ensuring consistent vocabulary
 
 **Result:** 3,957 reviews ready for feature extraction.
 
@@ -127,7 +127,7 @@ Reviews are converted to numerical vectors using TF-IDF. Key parameters:
 - `sublinear_tf=True` — replaces raw frequency with 1 + log(freq) to reduce the impact of very common terms
 - `stop_words` - sklearn defaults + manually added and domain specific terms (robinhood, stock, market, trading, etc.)
 
-**Result:** TF-IDF matrix of shape (3957, 1862) — 3957 reviews × 1862 features
+**Result:** TF-IDF matrix of shape (3957, 1862) — 3957 reviews x 1862 features
 
 ---
 
@@ -180,6 +180,8 @@ Sentiment labels were derived from star ratings (no manual annotation required):
 - 1–2 stars -> negative
 - 3 stars -> neutral
 - 4–5 stars -> positive
+
+
 Three classifiers were compared on the same TF-IDF features:
  
 | Model | Test Accuracy | CV Mean | CV Std |
@@ -207,8 +209,7 @@ Three classifiers were compared on the same TF-IDF features:
 ### Key Findings
  
 - **Trading & Options is the dominant pain point**— cluster 0 mentions execution, fills, options features, crypto, or pricing
-- **Rating trend is declining**- Google Play average fell from ~3.4 (May 2025) to ~1.6 (April 2026); the worst single-month drop was -2.67 stars in November 2025
-- **Poor app quality is industry-wide** — Fidelity has a lower average rating (1.75) than Robinhood (2.51) despite being a larger company
+- **Rating trend is declining**- Google Play average fell from ~3.6 (May 2025) to ~1.6 (April 2026); the worst single-month drop was -2.67 stars in November 2025
 
 ![Competitor Negative Review Rate](figures/competitor_neg_rate.png)
 
